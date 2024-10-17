@@ -1,11 +1,26 @@
 const express = require("express");
+
 const mongoose = require("mongoose");
 const cors = require("cors");
 const apiRoutes = require("./routes/api");
 require("dotenv").config(); // Load environment variables
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+
+// Serve the static files from the React app (build folder)
+
+app.use(express.static(path.join(__dirname, "./client/build")));
+
+// Serve the index.html for any unknown routes, enabling client-side routing
+
+app.get("*", (req, res) => {
+
+res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
